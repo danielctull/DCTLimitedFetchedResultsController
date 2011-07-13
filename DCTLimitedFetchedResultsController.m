@@ -121,31 +121,28 @@
 	}];
 	
 	[objects removeObjectsInArray:deletedObjects];
+	
+	if ([objects count] == [self.fetchedObjects count]) return; // Needless check? No, because the incoming objects might not be in the ones deleted.
+	
 	fetchedObjects = [objects copy];
 	
-	if ([fetchedObjects count] == self.limit) return; // Needless check?
-	
-	
-	NSArray *originalFetchedObjects = fetchedObjects;	
-	
 	NSArray *newFetchedObjects = [self.managedObjectContext executeFetchRequest:self.fetchRequest error:nil];
-	[objects addObjectsFromArray:newFetchedObjects];
-	[objects sortUsingDescriptors:self.fetchRequest.sortDescriptors];
-	fetchedObjects = [objects subarrayWithRange:NSMakeRange(0, self.limit)];
-	
-	
-	[fetchedObjects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
-		if (![originalFetchedObjects containsObject:object])
-			[self dctInternal_sendInsertionOfObject:object index:index];
-	}];
+	[self dctInternal_insertedObjects:newFetchedObjects];
 }
 
 - (void)dctInternal_insertedObjects:(NSArray *)insertedObjects {
 	
+	NSMutableArray *objects = [fetchedObjects mutableCopy];
+	
+	[insertedObjects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+		if ([self.fetchRequest.predicate evaluateWithObject:object])
+			[objects addObject:object];
+	}];
+	
+	if ([objects count] == [self.fetchedObjects count]) return;
+	
 	NSArray *originalFetchedObjects = fetchedObjects;
 	
-	NSMutableArray *objects = [fetchedObjects mutableCopy];
-	[objects addObjectsFromArray:insertedObjects];
 	[objects sortUsingDescriptors:self.fetchRequest.sortDescriptors];
 	fetchedObjects = [objects subarrayWithRange:NSMakeRange(0, self.limit)];
 	
@@ -164,14 +161,22 @@
 
 - (void)dctInternal_refreshedObjects:(NSArray *)refreshedObjects {}
 
-- (void)dctInternal_sendInsertionOfObject:(id)object index:(NSUInteger)index {}
+- (void)dctInternal_sendInsertionOfObject:(id)object index:(NSUInteger)index {
+	
+	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+	[self.delegate controller:self 
+			  didChangeObject:object
+				  atIndexPath:nil
+				forChangeType:NSFetchedResultsChangeInsert
+				 newIndexPath:indexPath];
+}
 
 - (void)dctInternal_sendDeletionOfObject:(id)object index:(NSUInteger)index {
 	
-	NSIndexPath *ip = [NSIndexPath indexPathForRow:index inSection:0];
+	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
 	[self.delegate controller:self 
 			  didChangeObject:object
-				  atIndexPath:ip
+				  atIndexPath:indexPath
 				forChangeType:NSFetchedResultsChangeDelete
 				 newIndexPath:nil];
 }
