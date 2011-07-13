@@ -10,4 +10,6 @@
 
 @interface DCTLimitedFetchedResultsController : NSFetchedResultsController
 
+@property (nonatomic, assign) NSUInteger limit;
+
 @end
