@@ -11,10 +11,10 @@
 @interface DCTLimitedFetchedResultsController ()
 - (void)dctInternal_managedObjectContextDidChangeNotification:(NSNotification *)notification;
 
-- (void)dctInternal_deletedObjects:(NSSet *)deletedObjects;
-- (void)dctInternal_insertedObjects:(NSSet *)insertedObjects;
-- (void)dctInternal_updatedObjects:(NSSet *)updatedObjects;
-- (void)dctInternal_refreshedObjects:(NSSet *)refreshedObjects;
+- (void)dctInternal_deletedObjects:(NSArray *)deletedObjects;
+- (void)dctInternal_insertedObjects:(NSArray *)insertedObjects;
+- (void)dctInternal_updatedObjects:(NSArray *)updatedObjects;
+- (void)dctInternal_refreshedObjects:(NSArray *)refreshedObjects;
 
 - (void)dctInternal_sendInsertionOfObject:(id)object index:(NSUInteger)index;
 - (void)dctInternal_sendDeletionOfObject:(id)object index:(NSUInteger)index;
@@ -88,16 +88,16 @@
 	NSDictionary *userInfo = [notification userInfo];
 	
 	NSSet *deletedObjects = [userInfo objectForKey:NSDeletedObjectsKey];
-	[self dctInternal_deletedObjects:deletedObjects];
+	[self dctInternal_deletedObjects:[deletedObjects allObjects]];
 	
 	NSSet *insertedObjects = [userInfo objectForKey:NSInsertedObjectsKey];
-	[self dctInternal_insertedObjects:insertedObjects];
+	[self dctInternal_insertedObjects:[insertedObjects allObjects]];
 	
 	NSSet *updatedObjects = [userInfo objectForKey:NSUpdatedObjectsKey];
-	[self dctInternal_updatedObjects:updatedObjects];
+	[self dctInternal_updatedObjects:[updatedObjects allObjects]];
 	
 	NSSet *refreshedObjects = [userInfo objectForKey:NSRefreshedObjectsKey];
-	[self dctInternal_refreshedObjects:refreshedObjects];
+	[self dctInternal_refreshedObjects:[refreshedObjects allObjects]];
 	
 	[self.delegate controllerDidChangeContent:self];
 	
@@ -111,7 +111,7 @@
 	
 }
 
-- (void)dctInternal_deletedObjects:(NSSet *)deletedObjects {
+- (void)dctInternal_deletedObjects:(NSArray *)deletedObjects {
 	
 	NSMutableArray *objects = [fetchedObjects mutableCopy];
 		
@@ -120,7 +120,7 @@
 			[self dctInternal_sendDeletionOfObject:object index:index];
 	}];
 	
-	[objects removeObjectsInArray:[deletedObjects allObjects]];
+	[objects removeObjectsInArray:deletedObjects];
 	fetchedObjects = [objects copy];
 	
 	if ([fetchedObjects count] == self.limit) return; // Needless check?
@@ -140,12 +140,12 @@
 	}];
 }
 
-- (void)dctInternal_insertedObjects:(NSSet *)insertedObjects {
+- (void)dctInternal_insertedObjects:(NSArray *)insertedObjects {
 	
 	NSArray *originalFetchedObjects = fetchedObjects;
 	
 	NSMutableArray *objects = [fetchedObjects mutableCopy];
-	[objects addObjectsFromArray:[insertedObjects allObjects]];
+	[objects addObjectsFromArray:insertedObjects];
 	[objects sortUsingDescriptors:self.fetchRequest.sortDescriptors];
 	fetchedObjects = [objects subarrayWithRange:NSMakeRange(0, self.limit)];
 	
@@ -160,9 +160,9 @@
 	}];
 }
 
-- (void)dctInternal_updatedObjects:(NSSet *)updatedObjects {}
+- (void)dctInternal_updatedObjects:(NSArray *)updatedObjects {}
 
-- (void)dctInternal_refreshedObjects:(NSSet *)refreshedObjects {}
+- (void)dctInternal_refreshedObjects:(NSArray *)refreshedObjects {}
 
 - (void)dctInternal_sendInsertionOfObject:(id)object index:(NSUInteger)index {}
 
