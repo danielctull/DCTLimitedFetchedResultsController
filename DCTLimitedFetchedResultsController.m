@@ -11,13 +11,14 @@
 @interface DCTLimitedFetchedResultsController ()
 - (void)dctInternal_managedObjectContextDidChangeNotification:(NSNotification *)notification;
 
-- (void)dctInternal_deletedObjects:(NSArray *)deletedObjects;
-- (void)dctInternal_insertedObjects:(NSArray *)insertedObjects;
-- (void)dctInternal_updatedObjects:(NSArray *)updatedObjects;
-- (void)dctInternal_refreshedObjects:(NSArray *)refreshedObjects;
+- (void)dctInternal_deletedObjects:(NSSet *)deletedObjects;
+- (void)dctInternal_insertedObjects:(NSSet *)insertedObjects;
+- (void)dctInternal_updatedObjects:(NSSet *)updatedObjects;
+- (void)dctInternal_refreshedObjects:(NSSet *)refreshedObjects;
 
 - (void)dctInternal_sendInsertionOfObject:(id)object index:(NSUInteger)index;
 - (void)dctInternal_sendDeletionOfObject:(id)object index:(NSUInteger)index;
+- (void)dctInternal_sendUpdateOfObject:(id)object index:(NSUInteger)index;
 
 @end
 
@@ -88,60 +89,50 @@
 	NSDictionary *userInfo = [notification userInfo];
 	
 	NSSet *deletedObjects = [userInfo objectForKey:NSDeletedObjectsKey];
-	[self dctInternal_deletedObjects:[deletedObjects allObjects]];
+	[self dctInternal_deletedObjects:deletedObjects];
 	
 	NSSet *insertedObjects = [userInfo objectForKey:NSInsertedObjectsKey];
-	[self dctInternal_insertedObjects:[insertedObjects allObjects]];
+	[self dctInternal_insertedObjects:insertedObjects];
 	
 	NSSet *updatedObjects = [userInfo objectForKey:NSUpdatedObjectsKey];
-	[self dctInternal_updatedObjects:[updatedObjects allObjects]];
+	[self dctInternal_updatedObjects:updatedObjects];
 	
 	NSSet *refreshedObjects = [userInfo objectForKey:NSRefreshedObjectsKey];
-	[self dctInternal_refreshedObjects:[refreshedObjects allObjects]];
+	[self dctInternal_refreshedObjects:refreshedObjects];
 	
-	[self.delegate controllerDidChangeContent:self];
-	
-	/*
-	NSMutableArray *objects = [fetchedObjects mutableCopy];
-	
-	NSMutableArray *deletedIndexes = [[NSMutableArray alloc] initWithCapacity:[updatedObjects count]];
-	
-	[objects addObjectsFromArray:[insertedObjects allObjects]];*/
-	
-	
+	[self.delegate controllerDidChangeContent:self];	
 }
 
-- (void)dctInternal_deletedObjects:(NSArray *)deletedObjects {
+- (void)dctInternal_deletedObjects:(NSSet *)deletedObjects {
 	
-	NSMutableArray *objects = [fetchedObjects mutableCopy];
-		
-	[objects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+	if (![[NSSet setWithArray:self.fetchedObjects] intersectsSet:deletedObjects]) return;
+	
+	[self.fetchedObjects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
 		if ([deletedObjects containsObject:object])
 			[self dctInternal_sendDeletionOfObject:object index:index];
 	}];
 	
-	[objects removeObjectsInArray:deletedObjects];
-	
-	if ([objects count] == [self.fetchedObjects count]) return; // Needless check? No, because the incoming objects might not be in the ones deleted.
+	NSMutableArray *objects = [fetchedObjects mutableCopy];
+	[objects removeObjectsInArray:[deletedObjects allObjects]];
 	
 	fetchedObjects = [objects copy];
 	
 	NSArray *newFetchedObjects = [self.managedObjectContext executeFetchRequest:self.fetchRequest error:nil];
-	[self dctInternal_insertedObjects:newFetchedObjects];
+	[self dctInternal_insertedObjects:[NSSet setWithArray:newFetchedObjects]];
 }
 
-- (void)dctInternal_insertedObjects:(NSArray *)insertedObjects {
+- (void)dctInternal_insertedObjects:(NSSet *)insertedObjects {
 	
 	NSMutableArray *objects = [fetchedObjects mutableCopy];
 	
-	[insertedObjects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+	[insertedObjects enumerateObjectsUsingBlock:^(id object, BOOL *stop) {
 		if ([self.fetchRequest.predicate evaluateWithObject:object])
 			[objects addObject:object];
 	}];
 	
 	if ([objects count] == [self.fetchedObjects count]) return;
 	
-	NSArray *originalFetchedObjects = fetchedObjects;
+	NSArray *originalFetchedObjects = self.fetchedObjects;	
 	
 	[objects sortUsingDescriptors:self.fetchRequest.sortDescriptors];
 	fetchedObjects = [objects subarrayWithRange:NSMakeRange(0, self.limit)];
@@ -157,9 +148,29 @@
 	}];
 }
 
-- (void)dctInternal_updatedObjects:(NSArray *)updatedObjects {}
+- (void)dctInternal_updatedObjects:(NSSet *)updatedObjects {
+	
+	if (![[NSSet setWithArray:self.fetchedObjects] intersectsSet:updatedObjects]) return;
+	
+	[self.fetchedObjects enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+		if ([updatedObjects containsObject:object])
+			[self dctInternal_sendUpdateOfObject:object index:index];
+	}];
+	
 
-- (void)dctInternal_refreshedObjects:(NSArray *)refreshedObjects {}
+}
+
+- (void)dctInternal_refreshedObjects:(NSSet *)refreshedObjects {}
+
+
+- (void)dctInternal_sendUpdateOfObject:(id)object index:(NSUInteger)index {
+	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+	[self.delegate controller:self 
+			  didChangeObject:object
+				  atIndexPath:nil
+				forChangeType:NSFetchedResultsChangeUpdate
+				 newIndexPath:indexPath];
+}
 
 - (void)dctInternal_sendInsertionOfObject:(id)object index:(NSUInteger)index {
 	
