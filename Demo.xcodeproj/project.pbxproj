@@ -16,6 +16,7 @@
 		242CC86B13CE2CDF00E2FAE4 /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 242CC86A13CE2CDF00E2FAE4 /* DemoViewController.m */; };
 		242CC86E13CE2CDF00E2FAE4 /* DemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 242CC86C13CE2CDF00E2FAE4 /* DemoViewController.xib */; };
 		2436534C13CE2E970069B15D /* DCTLimitedFetchedResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2436533513CE2E970069B15D /* DCTLimitedFetchedResultsController.m */; };
+		2436534F13CE2F190069B15D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2436534E13CE2F190069B15D /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		242CC86D13CE2CDF00E2FAE4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DemoViewController.xib; sourceTree = "<group>"; };
 		2436533413CE2E970069B15D /* DCTLimitedFetchedResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTLimitedFetchedResultsController.h; sourceTree = "<group>"; };
 		2436533513CE2E970069B15D /* DCTLimitedFetchedResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTLimitedFetchedResultsController.m; sourceTree = "<group>"; };
+		2436534E13CE2F190069B15D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2436534F13CE2F190069B15D /* CoreData.framework in Frameworks */,
 				242CC85813CE2CDE00E2FAE4 /* UIKit.framework in Frameworks */,
 				242CC85A13CE2CDE00E2FAE4 /* Foundation.framework in Frameworks */,
 				242CC85C13CE2CDE00E2FAE4 /* CoreGraphics.framework in Frameworks */,
@@ -71,6 +74,7 @@
 		242CC85613CE2CDE00E2FAE4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2436534E13CE2F190069B15D /* CoreData.framework */,
 				242CC85713CE2CDE00E2FAE4 /* UIKit.framework */,
 				242CC85913CE2CDE00E2FAE4 /* Foundation.framework */,
 				242CC85B13CE2CDE00E2FAE4 /* CoreGraphics.framework */,
