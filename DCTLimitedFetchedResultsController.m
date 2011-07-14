@@ -9,11 +9,11 @@
 #import "DCTLimitedFetchedResultsController.h"
 
 
-@interface DCTLimitedFetchedResultsControllerSectionInfo : NSObject <NSFetchedResultsSectionInfo>
-@property (nonatomic, strong) NSString *indexTitle;
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, assign) NSUInteger numberOfObjects;
-@property (nonatomic, strong) NSArray *objects;	
+@interface DCTLimitedFetchedResultsControllerSectionInfo : NSObject
+@property (nonatomic, strong, readwrite) NSString *indexTitle;
+@property (nonatomic, strong, readwrite) NSString *name;
+@property (nonatomic, assign, readwrite) NSUInteger numberOfObjects;
+@property (nonatomic, strong, readwrite) NSArray *objects;	
 @end
 
 @implementation DCTLimitedFetchedResultsControllerSectionInfo
@@ -74,6 +74,34 @@
 
 - (NSArray *)fetchedObjects {
     return fetchedObjects;
+}
+
+- (NSManagedObjectContext *)managedObjectContext {
+	return fetchedResultsController.managedObjectContext;
+}
+
+- (NSFetchRequest *)fetchRequest {
+	return fetchedResultsController.fetchRequest;
+}
+
+- (NSString *)cacheName {
+	return fetchedResultsController.cacheName;
+}
+
+- (NSString *)sectionNameKeyPath {
+	return fetchedResultsController.sectionNameKeyPath;
+}
+
+- (NSArray *)sectionIndexTitles {
+	return fetchedResultsController.sectionIndexTitles;
+}
+
+- (NSInteger)sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)sectionIndex {
+	return 0;
+}
+
+- (NSString *)sectionIndexTitleForSectionName:(NSString *)sectionName {
+	return nil;
 }
 
 - (NSArray *)sections {
