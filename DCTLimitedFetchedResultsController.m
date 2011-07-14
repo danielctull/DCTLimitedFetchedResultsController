@@ -131,9 +131,13 @@
 		
 		if (newIndexPath.row >= self.limit) return;
 		
+		//NSLog(@"%@:%@ INSERT: %@", self, NSStringFromSelector(_cmd), newIndexPath);
+		
 		NSMutableArray *array = [self.fetchedObjects mutableCopy];
-		[array insertObject:object atIndex:indexPath.row];
+		[array insertObject:object atIndex:newIndexPath.row];
 		fetchedObjects = [array copy];
+		
+		//NSLog(@"%@:%@ %@", self, NSStringFromSelector(_cmd), fetchedObjects);
 		
 		[self.delegate controller:self
 				  didChangeObject:object
@@ -158,6 +162,8 @@
 		
 	} else if (type == NSFetchedResultsChangeDelete) {
 		
+		//NSLog(@"%@:%@ DELETE: %@", self, NSStringFromSelector(_cmd), indexPath);
+		
 		if (indexPath.row >= self.limit) return;
 		
 		NSMutableArray *array = [self.fetchedObjects mutableCopy];
@@ -168,10 +174,16 @@
 				  didChangeObject:object
 					  atIndexPath:indexPath
 					forChangeType:NSFetchedResultsChangeDelete
-					 newIndexPath:nil];
+					 newIndexPath:newIndexPath];
+		
+		if ([self.fetchedObjects count] < self.limit-1) return;
 		
 		NSIndexPath *lastIndexPath = [NSIndexPath indexPathForRow:self.limit-1 inSection:0];
 		id newObject = [fetchedResultsController objectAtIndexPath:lastIndexPath];
+		
+		//NSLog(@"%@:%@ REFILL: %@", self, NSStringFromSelector(_cmd), lastIndexPath);
+		
+		lastIndexPath = [NSIndexPath indexPathForRow:self.limit-1 inSection:0];
 		
 		[self controller:controller
 		 didChangeObject:newObject
