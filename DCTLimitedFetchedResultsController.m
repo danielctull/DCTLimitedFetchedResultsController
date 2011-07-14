@@ -8,6 +8,21 @@
 
 #import "DCTLimitedFetchedResultsController.h"
 
+
+@interface DCTLimitedFetchedResultsControllerSectionInfo : NSObject <NSFetchedResultsSectionInfo>
+@property (nonatomic, strong) NSString *indexTitle;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, assign) NSUInteger numberOfObjects;
+@property (nonatomic, strong) NSArray *objects;	
+@end
+
+@implementation DCTLimitedFetchedResultsControllerSectionInfo
+@synthesize indexTitle;
+@synthesize name;
+@synthesize numberOfObjects;
+@synthesize objects;
+@end
+
 @interface DCTLimitedFetchedResultsController () <NSFetchedResultsControllerDelegate>
 @end
 
@@ -25,10 +40,7 @@
         sectionNameKeyPath:(NSString *)sectionNameKeyPath 
                  cacheName:(NSString *)name {
     
-	if (!(self = [self initWithFetchRequest:fetchRequest
-                       managedObjectContext:context
-                         sectionNameKeyPath:nil
-                                  cacheName:nil])) return nil;
+	if (!(self = [super init])) return nil;
 	
 	fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
 																   managedObjectContext:context
@@ -43,9 +55,19 @@
 	
 	if (![fetchedResultsController performFetch:error]) return NO;
 	
-	fetchedObjects = [fetchedResultsController.fetchedObjects subarrayWithRange:NSMakeRange(0, self.limit)];
+	NSLog(@"%@:%@ %@", self, NSStringFromSelector(_cmd), fetchedResultsController.fetchedObjects);
 	
-	return YES;	
+	fetchedObjects = fetchedResultsController.fetchedObjects;
+	
+	if ([fetchedObjects count] >= self.limit)
+		fetchedObjects = [fetchedResultsController.fetchedObjects subarrayWithRange:NSMakeRange(0, self.limit)];
+	
+	
+	NSLog(@"%@:%@ %@", self, NSStringFromSelector(_cmd), fetchedObjects);
+	
+	
+	
+	return YES;
 }
 
 - (NSIndexPath *)indexPathForObject:(id)object {
@@ -59,6 +81,13 @@
 
 - (NSArray *)fetchedObjects {
     return fetchedObjects;
+}
+
+- (NSArray *)sections {
+	DCTLimitedFetchedResultsControllerSectionInfo *info = [[DCTLimitedFetchedResultsControllerSectionInfo alloc] init];
+	info.numberOfObjects = [fetchedObjects count];
+	info.objects = fetchedObjects;
+	return [NSArray arrayWithObject:info];
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
