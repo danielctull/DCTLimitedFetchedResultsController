@@ -178,6 +178,8 @@
 		
 		if ([self.fetchedObjects count] < self.limit-1) return;
 		
+		if ([self.fetchedObjects count] == [[[fetchedResultsController sections] objectAtIndex:0] numberOfObjects]) return;
+				
 		NSIndexPath *lastIndexPath = [NSIndexPath indexPathForRow:self.limit-1 inSection:0];
 		id newObject = [fetchedResultsController objectAtIndexPath:lastIndexPath];
 		
