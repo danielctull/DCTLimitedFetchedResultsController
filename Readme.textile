@@ -1,0 +1,56 @@
+h1. DCTLimitedFetchedResultsController
+
+A fetched results controller that limits the number of fetched objects.
+
+
+h2. Automatic Reference Counting (ARC)
+
+This project uses ARC.
+
+h2. Branch Structure
+
+There are two branches to this repository, *master* and *demo*.
+
+h3. master
+
+The master branch contains the code and should be used if you want to add these extensions as a git submodule in other projects. It will only contain the class files themselves without the Xcode project or example classes. This is preferable as it will keep your directories clean of any code which is unnecessary to your working project.
+
+To add this project as a submodule you should run the following from inside your project's git repository:
+
+bc. git submodule add git://github.com/danielctull/DCTNotificationViewController.git
+
+To keep up to date with the latest changes `cd` into the directory that contains this submodule and pull the newest changes as usual:
+
+bc. git pull origin
+
+h3. demo
+
+This contains an Xcode project that demonstrates the code and is the branch to use to see how to use the code. The demo branch contains a submodule reference to the master branch to bring in the library classes.
+
+When changing to the demo branch you will need to run through the following set of commands:
+
+bc. git checkout demo
+bc. git submodule init
+bc. git submodule update
+
+After these you will see the example project and the library code will be in a sub-directory.
+
+h3. Artefacts
+
+Sometimes, there may be artefacts left over when switching from demo to master. These are files that are ignored by git and are easily cleaned up by running
+
+bc. git clean -dxf
+
+h2. License
+
+Copyright (C) 2010 Daniel Tull. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+* Neither the name of the author nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
