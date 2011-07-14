@@ -2,6 +2,7 @@ h1. DCTLimitedFetchedResultsController
 
 A fetched results controller that limits the number of fetched objects.
 
+*WARNING* This code has been only slightly tested and I consider it for demonstration purposes only at this stage.
 
 h2. Automatic Reference Counting (ARC)
 
