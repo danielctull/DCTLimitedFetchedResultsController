@@ -55,18 +55,11 @@
 	
 	if (![fetchedResultsController performFetch:error]) return NO;
 	
-	NSLog(@"%@:%@ %@", self, NSStringFromSelector(_cmd), fetchedResultsController.fetchedObjects);
-	
 	fetchedObjects = fetchedResultsController.fetchedObjects;
 	
 	if ([fetchedObjects count] >= self.limit)
 		fetchedObjects = [fetchedResultsController.fetchedObjects subarrayWithRange:NSMakeRange(0, self.limit)];
-	
-	
-	NSLog(@"%@:%@ %@", self, NSStringFromSelector(_cmd), fetchedObjects);
-	
-	
-	
+		
 	return YES;
 }
 
