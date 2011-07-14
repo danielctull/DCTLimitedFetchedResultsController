@@ -19,6 +19,7 @@
 		24E0B68D13CE69D3009B53EE /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 24E0B68C13CE69D3009B53EE /* DetailViewController.m */; };
 		24E0B69013CE69D3009B53EE /* MasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24E0B68E13CE69D3009B53EE /* MasterViewController.xib */; };
 		24E0B69313CE69D3009B53EE /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24E0B69113CE69D3009B53EE /* DetailViewController.xib */; };
+		24E0B72A13CE6AA1009B53EE /* DCTLimitedFetchedResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 24E0B6F713CE6AA1009B53EE /* DCTLimitedFetchedResultsController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,8 @@
 		24E0B68C13CE69D3009B53EE /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		24E0B68F13CE69D3009B53EE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
 		24E0B69213CE69D3009B53EE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DetailViewController.xib; sourceTree = "<group>"; };
+		24E0B6F613CE6AA1009B53EE /* DCTLimitedFetchedResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTLimitedFetchedResultsController.h; sourceTree = "<group>"; };
+		24E0B6F713CE6AA1009B53EE /* DCTLimitedFetchedResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTLimitedFetchedResultsController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +63,7 @@
 		24E0B66213CE69D2009B53EE = {
 			isa = PBXGroup;
 			children = (
+				24E0B69D13CE6AA1009B53EE /* DCTLimitedFetchedResultsController */,
 				24E0B67913CE69D3009B53EE /* DCTLimitedFetchedResultsControllerDemo */,
 				24E0B67013CE69D3009B53EE /* Frameworks */,
 				24E0B66E13CE69D3009B53EE /* Products */,
@@ -111,6 +115,15 @@
 				24E0B68113CE69D3009B53EE /* DCTLimitedFetchedResultsControllerDemo-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		24E0B69D13CE6AA1009B53EE /* DCTLimitedFetchedResultsController */ = {
+			isa = PBXGroup;
+			children = (
+				24E0B6F613CE6AA1009B53EE /* DCTLimitedFetchedResultsController.h */,
+				24E0B6F713CE6AA1009B53EE /* DCTLimitedFetchedResultsController.m */,
+			);
+			path = DCTLimitedFetchedResultsController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,6 +194,7 @@
 				24E0B68713CE69D3009B53EE /* DCTLimitedFetchedResultsControllerDemo.xcdatamodeld in Sources */,
 				24E0B68A13CE69D3009B53EE /* MasterViewController.m in Sources */,
 				24E0B68D13CE69D3009B53EE /* DetailViewController.m in Sources */,
+				24E0B72A13CE6AA1009B53EE /* DCTLimitedFetchedResultsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +314,7 @@
 				24E0B69813CE69D3009B53EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
